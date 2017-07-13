@@ -23,6 +23,7 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Set any additional class parameters as needed
+        self.count = 1
 
 
     def reset(self, destination=None, testing=False):
@@ -43,7 +44,8 @@ class LearningAgent(Agent):
             self.epsilon = 0
             self.alpha = 0
         else:
-            self.epsilon -= 0.05
+            self.epsilon = self.alpha ** self.count
+            self.count += 1
 
         return None
 
@@ -181,7 +183,7 @@ def run():
     #   verbose     - set to True to display additional output from the simulation
     #   num_dummies - discrete number of dummy agents in the environment, default is 100
     #   grid_size   - discrete number of intersections (columns, rows), default is (8, 6)
-    env = Environment()
+    env = Environment(verbose=True)
     
     ##############
     # Create the driving agent
@@ -189,7 +191,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent, learning=learning)
+    agent = env.create_agent(LearningAgent, learning=learning, alpha=0.95)
     
     ##############
     # Follow the driving agent
@@ -204,7 +206,7 @@ def run():
     #   display      - set to False to disable the GUI if PyGame is enabled
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
-    sim = Simulator(env, update_delay=0.01, display=display, log_metrics=log_metrics)
+    sim = Simulator(env, update_delay=0.01, display=display, log_metrics=log_metrics, optimized=True)
     
     ##############
     # Run the simulator
